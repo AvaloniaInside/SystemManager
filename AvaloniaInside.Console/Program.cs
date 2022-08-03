@@ -1,4 +1,5 @@
-﻿using AvaloniaInside;
+﻿using System.Diagnostics;
+using AvaloniaInside;
 using AvaloniaInside.SSH;
 
 // *********************************************************************************************************
@@ -19,8 +20,8 @@ Network.NetworkInterfaceOperationStateChanged += eventargs =>
 
 // *********************************************************************************************************
 // ssh stuff
-Ssh.StartDaemon();
-Ssh.StopDaemon();
+//Ssh.StartDaemon();
+//Ssh.StopDaemon();
 
 // make an endless loop
 Task.Factory.StartNew(() =>
