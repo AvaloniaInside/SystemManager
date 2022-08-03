@@ -4,6 +4,8 @@ namespace AvaloniaInside.SSH;
 
 public static class Ssh
 {
+    public static bool IsRunning => CheckIfSshDaemonIsRunning();
+
     /// <summary>
     ///     Starts the network daemon.
     /// </summary>

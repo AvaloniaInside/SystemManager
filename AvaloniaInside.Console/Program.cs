@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
-using AvaloniaInside;
+﻿using AvaloniaInside;
 using AvaloniaInside.SSH;
 
 // *********************************************************************************************************
 // network stuff
 Settings.DefaultNetworkInterface = "eth0";
 Settings.NetworkOperationStateDetectionEnabled = true;
+
+Console.WriteLine($"DefaultNetworkInterface OperationState: {Network.DefaultInterfaceOperationState.ToString()}");
 
 // listen to OperationState changes for default NetworkInterface
 Network.NetworkInterfaceOperationStateChanged += eventargs =>
@@ -17,11 +18,11 @@ Network.NetworkInterfaceOperationStateChanged += eventargs =>
 //Network.StartDaemon();
 //Network.StopDaemon();
 
-
 // *********************************************************************************************************
 // ssh stuff
 //Ssh.StartDaemon();
 //Ssh.StopDaemon();
+Console.WriteLine($"SSH running: {Ssh.IsRunning}");
 
 // make an endless loop
 Task.Factory.StartNew(() =>
