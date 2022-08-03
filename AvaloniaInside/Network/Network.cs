@@ -5,7 +5,6 @@ public static class Network
     public delegate void NetworkInterfaceOperationStateChangedHandler(
         NetworkInterfaceOperationStateChangedEvent eventargs);
 
-    private static CancellationTokenSource? _networkCheckerCancellationTokenSource;
     public static NetworkInterfaceOperationState DefaultInterfaceOperationState { get; private set; }
 
     /// <summary>
@@ -14,40 +13,18 @@ public static class Network
     public static event NetworkInterfaceOperationStateChangedHandler? NetworkInterfaceOperationStateChanged;
 
     /// <summary>
-    ///     Starts the NetworkOperationStateChecker.
+    ///     Check if the OperationState of the <see cref="Settings.DefaultNetworkInterface" /> has changed.
+    ///     If changed <see cref="NetworkInterfaceOperationStateChanged" /> is raised.
     /// </summary>
-    public static void StartNetworkOperationStateChecker()
+    internal static void CheckDefaultNetworkInterfaceOperationState()
     {
-        if (_networkCheckerCancellationTokenSource != null)
-            return;
-        _networkCheckerCancellationTokenSource = new CancellationTokenSource();
-        new Task(() =>
-            {
-                while (!_networkCheckerCancellationTokenSource.IsCancellationRequested)
-                {
-                    var newState = GetNetworkInterfaceOperationState(Settings.DefaultNetworkInterface);
-                    if (newState != DefaultInterfaceOperationState)
-                    {
-                        NetworkInterfaceOperationStateChanged?.Invoke(
-                            new NetworkInterfaceOperationStateChangedEvent(newState));
-                        DefaultInterfaceOperationState = newState;
-                    }
-
-                    Thread.Sleep(1000);
-                }
-            }, _networkCheckerCancellationTokenSource.Token)
-            .Start();
-    }
-
-    /// <summary>
-    ///     Stops the NetworkOperationStateChecker.
-    /// </summary>
-    public static void StopNetworkOperationStateChecker()
-    {
-        if (_networkCheckerCancellationTokenSource == null) return;
-        _networkCheckerCancellationTokenSource.Cancel();
-        _networkCheckerCancellationTokenSource.Dispose();
-        _networkCheckerCancellationTokenSource = null;
+        var newState = GetNetworkInterfaceOperationState(Settings.DefaultNetworkInterface);
+        if (newState != DefaultInterfaceOperationState)
+        {
+            NetworkInterfaceOperationStateChanged?.Invoke(
+                new NetworkInterfaceOperationStateChangedEvent(newState));
+            DefaultInterfaceOperationState = newState;
+        }
     }
 
     /// <summary>
@@ -80,34 +57,10 @@ public static class Network
     /// <summary>
     ///     Starts the network daemon.
     /// </summary>
-    public static void StartNetworkDaemon()
-    {
-        try
-        {
-            Bash.Execute("/etc/init.d/S40network", "start",
-                out var error, out _);
-            if (!string.IsNullOrEmpty(error)) Console.WriteLine($"StartNetworkDaemon error: {error}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"StartNetworkDaemon error: {ex.Message}");
-        }
-    }
+    public static void StartDaemon() => SystemService.Start("S40network");
 
     /// <summary>
     ///     Stops the network daemon.
     /// </summary>
-    public static void StopNetworkDaemon()
-    {
-        try
-        {
-            Bash.Execute("/etc/init.d/S40network", "stop",
-                out var error, out _);
-            if (!string.IsNullOrEmpty(error)) Console.WriteLine($"StopNetworkDaemon error: {error}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"StopNetworkDaemon error: {ex.Message}");
-        }
-    }
+    public static void StopDaemon() => SystemService.Stop("S40network");
 }
