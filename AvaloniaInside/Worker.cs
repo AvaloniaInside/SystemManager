@@ -2,23 +2,27 @@ namespace AvaloniaInside;
 
 internal class Worker
 {
-    internal void Start()
+    internal void StartEndlessLoop()
     {
         Task.Factory.StartNew(() =>
         {
             while (true)
             {
-                if (Settings.NetworkOperationStateDetectionEnabled)
-                    Network.CheckDefaultNetworkInterfaceOperationState();
-
-                if (Settings.CpuUsageWatcherEnabled)
-                    Cpu.UpdateCpuUsageInformation();
-                
-                if (Settings.MemoryUsageWatcherEnabled)
-                    Memory.UpdateMemoryUsageInformation();
-
+                Work();
                 Thread.Sleep(1000);
             }
         });
+    }
+
+    internal void Work()
+    {
+        if (Settings.NetworkOperationStateDetectionEnabled)
+            Network.CheckDefaultNetworkInterfaceOperationState();
+
+        if (Settings.CpuUsageWatcherEnabled)
+            Cpu.UpdateCpuUsageInformation();
+                
+        if (Settings.MemoryUsageWatcherEnabled)
+            Memory.UpdateMemoryUsageInformation();
     }
 }

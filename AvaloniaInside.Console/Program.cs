@@ -10,6 +10,9 @@ AvaloniaInside.System.Init();
 Settings.DefaultNetworkInterface = "eth0";
 Settings.NetworkOperationStateDetectionEnabled = true;
 Settings.CpuUsageWatcherEnabled = true;
+Settings.MemoryUsageWatcherEnabled = true;
+Settings.MemoryUsageWarningLevel = 60;
+Settings.MemoryUsageOverloadLevel = 80;
 
 Console.WriteLine($"DefaultNetworkInterface OperationState: {Network.DefaultInterfaceOperationState.ToString()}");
 
@@ -47,6 +50,24 @@ Cpu.CpuUsageStateChanged += eventArgs =>
 {
     Console.WriteLine("CpuUsageStateChanged:");
     PrintCpuUsageState();
+};
+
+// *********************************************************************************************************
+// *********************************************************************************************************
+// memory stuff
+// *********************************************************************************************************
+// *********************************************************************************************************
+void PrintMemory()
+{
+    Console.WriteLine(
+        $"Memory Total {Memory.Total} Free: {Memory.Free} Usage: {Memory.Usage}% State: {Memory.State.ToString()}");
+}
+
+PrintMemory();
+Memory.MemoryUsageStateChanged += eventArgs =>
+{
+    Console.WriteLine("MemoryUsageStateChanged:");
+    PrintMemory();
 };
 
 // *********************************************************************************************************

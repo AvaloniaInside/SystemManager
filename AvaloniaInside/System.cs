@@ -6,6 +6,7 @@ public static class System
 
     public static void Init()
     {
-        _worker.Start();
+        _worker.Work();
+        _worker.StartEndlessLoop();
     }
 }

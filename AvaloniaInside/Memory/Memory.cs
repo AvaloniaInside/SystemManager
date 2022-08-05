@@ -9,17 +9,17 @@ public static class Memory
     /// <summary>
     ///     Free system memory
     /// </summary>
-    public static long MemoryFree { get; set; }
+    public static long Free { get; set; }
 
     /// <summary>
     ///     Available system memory
     /// </summary>
-    public static long MemoryTotal { get; set; }
+    public static long Total { get; set; }
 
     /// <summary>
     ///     Used system memory
     /// </summary>
-    public static double MemoryUsage => (float)MemoryFree / MemoryTotal * 100;
+    public static double Usage => (float)Free / Total;
 
     /// <summary>
     ///     State.
@@ -47,10 +47,10 @@ public static class Memory
             switch (property)
             {
                 case "MemTotal":
-                    MemoryTotal = value;
+                    Total = value;
                     break;
                 case "MemFree":
-                    MemoryFree = value;
+                    Free = value;
                     break;
             }
         }
@@ -58,7 +58,6 @@ public static class Memory
         var newState = EvaluateMemoryUsageState();
         if (newState != State)
             MemoryUsageStateChanged?.Invoke(new MemoryUsageStateChangedEventArgs(State, newState));
-
         State = newState;
         MemoryUsageUpdated?.Invoke(EventArgs.Empty);
     }
@@ -77,7 +76,7 @@ public static class Memory
         {
             if (c == ':')
                 propertyRead = true;
-            else
+            else if(!propertyRead)
                 property += c;
 
             if (!propertyRead) continue;
@@ -95,9 +94,9 @@ public static class Memory
     /// <returns></returns>
     private static MemoryUsageState EvaluateMemoryUsageState()
     {
-        if (MemoryUsage >= Settings.MemoryUsageOverloadLevel)
+        if (Usage >= Settings.MemoryUsageOverloadLevel)
             return MemoryUsageState.Overload;
-        if (MemoryUsage >= Settings.MemoryUsageWarningLevel)
+        if (Usage >= Settings.MemoryUsageWarningLevel)
             return MemoryUsageState.Warning;
         return MemoryUsageState.Ok;
     }
