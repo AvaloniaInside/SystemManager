@@ -13,6 +13,9 @@ internal class Worker
 
                 if (Settings.CpuUsageWatcherEnabled)
                     Cpu.UpdateCpuUsageInformation();
+                
+                if (Settings.MemoryUsageWatcherEnabled)
+                    Memory.UpdateMemoryUsageInformation();
 
                 Thread.Sleep(1000);
             }
