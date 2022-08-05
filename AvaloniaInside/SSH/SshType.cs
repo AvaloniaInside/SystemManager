@@ -1,4 +1,4 @@
-namespace AvaloniaInside.SSH;
+namespace AvaloniaInside;
 
 public enum SshType
 {

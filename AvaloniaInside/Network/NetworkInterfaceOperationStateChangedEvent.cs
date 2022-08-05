@@ -1,8 +1,8 @@
 namespace AvaloniaInside;
 
-public class NetworkInterfaceOperationStateChangedEvent : EventArgs
+public class NetworkInterfaceOperationStateChangedEventArgs : EventArgs
 {
-    internal NetworkInterfaceOperationStateChangedEvent(NetworkInterfaceOperationState interfaceState)
+    internal NetworkInterfaceOperationStateChangedEventArgs(NetworkInterfaceOperationState interfaceState)
     {
         NewOperationState = interfaceState;
     }

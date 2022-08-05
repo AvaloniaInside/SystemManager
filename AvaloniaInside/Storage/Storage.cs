@@ -1,4 +1,4 @@
-namespace AvaloniaInside.Resources;
+namespace AvaloniaInside;
 
 public class Storage
 {

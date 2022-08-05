@@ -3,7 +3,7 @@
 public static class Network
 {
     public delegate void NetworkInterfaceOperationStateChangedHandler(
-        NetworkInterfaceOperationStateChangedEvent eventargs);
+        NetworkInterfaceOperationStateChangedEventArgs eventargs);
 
     private static string _hostName;
 
@@ -39,7 +39,7 @@ public static class Network
         if (newState != DefaultInterfaceOperationState)
         {
             NetworkInterfaceOperationStateChanged?.Invoke(
-                new NetworkInterfaceOperationStateChangedEvent(newState));
+                new NetworkInterfaceOperationStateChangedEventArgs(newState));
             DefaultInterfaceOperationState = newState;
         }
     }
