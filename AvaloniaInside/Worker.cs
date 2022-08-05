@@ -1,18 +1,21 @@
 namespace AvaloniaInside;
 
-internal static class Worker
+internal class Worker
 {
-    static Worker()
+    internal void Start()
     {
         Task.Factory.StartNew(() =>
         {
-            if (Settings.NetworkOperationStateDetectionEnabled)
-                Network.CheckDefaultNetworkInterfaceOperationState();
+            while (true)
+            {
+                if (Settings.NetworkOperationStateDetectionEnabled)
+                    Network.CheckDefaultNetworkInterfaceOperationState();
 
-            if (Settings.CpuUsageWatcherEnabled)
-                Cpu.UpdateCpuUsageInformation();
+                if (Settings.CpuUsageWatcherEnabled)
+                    Cpu.UpdateCpuUsageInformation();
 
-            Thread.Sleep(1000);
+                Thread.Sleep(1000);
+            }
         });
     }
 }

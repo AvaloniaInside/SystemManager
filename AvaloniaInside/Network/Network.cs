@@ -53,7 +53,7 @@ public static class Network
     {
         try
         {
-            Bash.Execute("/bin/cat/", $"/sys/class/net/{networkInterface}/operstate",
+            Bash.Execute($"cat /sys/class/net/{networkInterface}/operstate",
                 out var error, out var output);
             if (!string.IsNullOrEmpty(error))
             {

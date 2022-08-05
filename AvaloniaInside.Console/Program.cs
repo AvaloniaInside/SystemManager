@@ -1,5 +1,6 @@
 ﻿using AvaloniaInside;
 
+AvaloniaInside.System.Init();
 
 // *********************************************************************************************************
 // *********************************************************************************************************
@@ -8,6 +9,7 @@
 // *********************************************************************************************************
 Settings.DefaultNetworkInterface = "eth0";
 Settings.NetworkOperationStateDetectionEnabled = true;
+Settings.CpuUsageWatcherEnabled = true;
 
 Console.WriteLine($"DefaultNetworkInterface OperationState: {Network.DefaultInterfaceOperationState.ToString()}");
 
@@ -27,14 +29,25 @@ Network.NetworkInterfaceOperationStateChanged += eventargs =>
 // cpu stuff
 // *********************************************************************************************************
 // *********************************************************************************************************
-Console.WriteLine(
-    $"Cpu Usage - Overall {Cpu.OverallUsage.Usage}% Core0: {Cpu.Core0Usage.Usage} Core1: {Cpu.Core1Usage.Usage} Core2: {Cpu.Core2Usage.Usage} Core3: {Cpu.Core3Usage.Usage}");
-Console.WriteLine(
-    $"Cpu State - Overall {Cpu.OverallUsage.State.ToString()} Core0: {Cpu.Core0Usage.State.ToString()} Core1: {Cpu.Core1Usage.State.ToString()} Core2: {Cpu.Core2Usage.State.ToString()} Core3: {Cpu.Core3Usage.State.ToString()}");
+void PrintCpuUsage()
+{
+    Console.WriteLine(
+        $"Cpu Usage - Overall {Cpu.OverallUsage.Usage}% Core0: {Cpu.Core0Usage.Usage}% Core1: {Cpu.Core1Usage.Usage}% Core2: {Cpu.Core2Usage.Usage}% Core3: {Cpu.Core3Usage.Usage}%");
+}
 
+void PrintCpuUsageState()
+{
+    Console.WriteLine(
+        $"Cpu State - Overall {Cpu.OverallUsage.State.ToString()} Core0: {Cpu.Core0Usage.State.ToString()} Core1: {Cpu.Core1Usage.State.ToString()} Core2: {Cpu.Core2Usage.State.ToString()} Core3: {Cpu.Core3Usage.State.ToString()}");
+}
 
-
-
+PrintCpuUsage();
+PrintCpuUsageState();
+Cpu.CpuUsageStateChanged += eventArgs =>
+{
+    Console.WriteLine("CpuUsageStateChanged:");
+    PrintCpuUsageState();
+};
 
 // *********************************************************************************************************
 // *********************************************************************************************************

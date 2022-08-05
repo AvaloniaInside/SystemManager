@@ -47,7 +47,7 @@ public static class Ssh
     /// </summary>
     public static bool CheckIfAnySshDaemonIsRunning()
     {
-        return Process.GetProcesses().Any(x => x.ProcessName is "drobear" or "/usr/sbin/sshd");
+        return Process.GetProcesses().Any(x => x.ProcessName.Contains("dropbear") || x.ProcessName.Contains("sshd"));
     }
 
     /// <summary>

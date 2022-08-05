@@ -2,7 +2,14 @@ namespace AvaloniaInside;
 
 public static class Cpu
 {
-    public delegate void CpuUsageStateChangedHandler(CpuUsageStateChangedEventArgs eventargs);
+    public delegate void CpuUsageStateChangedHandler(CpuUsageStateChangedEventArgs e);
+
+    public delegate void CpuUsageUpdatedHandler(EventArgs e);
+
+    static Cpu()
+    {
+        UpdateCpuUsageInformation();
+    }
 
     public static CpuUsageInformation OverallUsage { get; } = new();
     public static CpuUsageInformation Core0Usage { get; } = new();
@@ -14,6 +21,8 @@ public static class Cpu
     ///     Event when the <see cref="CpuUsageState" /> of a core or the cpu change.
     /// </summary>
     public static event CpuUsageStateChangedHandler? CpuUsageStateChanged;
+
+    public static event CpuUsageUpdatedHandler? CpuUsageUpdated;
 
     /// <summary>
     ///     Gets the cpu usage from /proc/stat
@@ -27,8 +36,8 @@ public static class Cpu
         var core3Changed = false;
         foreach (var line in File.ReadLines("/proc/stat"))
         {
-            var columns = line.Split(' ');
-            switch (columns[0])
+            var columns = line.Split(new[] { "  ", " " }, StringSplitOptions.None);
+            switch (columns[0].Trim())
             {
                 case "cpu":
                     UpdateCpuUsageInformation(columns, OverallUsage, CalculateCpuUsage(columns), out overallChanged);
@@ -50,6 +59,7 @@ public static class Cpu
 
         if (overallChanged || core0Changed || core1Changed || core2Changed || core3Changed)
             CpuUsageStateChanged?.Invoke(new CpuUsageStateChangedEventArgs());
+        CpuUsageUpdated?.Invoke(EventArgs.Empty);
     }
 
     /// <summary>
@@ -59,14 +69,14 @@ public static class Cpu
     /// <returns></returns>
     private static double CalculateCpuUsage(string[] columns)
     {
-        var col2 = Convert.ToDouble(columns[2]);
+        var col1 = Convert.ToDouble(columns[1]);
+        var col3 = Convert.ToDouble(columns[3]);
         var col4 = Convert.ToDouble(columns[4]);
-        var col5 = Convert.ToDouble(columns[5]);
-        return (col2 + col4) * 100 / (col2 + col4 + col5);
+        return Math.Round((col1 + col3) * 100 / (col1 + col3 + col4), 2);
     }
 
     /// <summary>
-    /// Updates the <see cref="CpuUsageInformation"/> for a core or the cpu
+    ///     Updates the <see cref="CpuUsageInformation" /> for a core or the cpu
     /// </summary>
     /// <param name="columns"></param>
     /// <param name="information"></param>
