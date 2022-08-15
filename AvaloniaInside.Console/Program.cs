@@ -1,4 +1,6 @@
 ﻿using AvaloniaInside;
+using AvaloniaInside.Helpers;
+using AvaloniaInside.Monitor;
 
 AvaloniaInside.System.Init();
 
@@ -10,9 +12,9 @@ AvaloniaInside.System.Init();
 Settings.DefaultNetworkInterface = "eth0";
 Settings.NetworkOperationStateDetectionEnabled = true;
 Settings.CpuUsageWatcherEnabled = true;
-Settings.MemoryUsageWatcherEnabled = true;
-Settings.MemoryUsageWarningLevel = 60;
-Settings.MemoryUsageOverloadLevel = 80;
+// Settings.MemoryUsageWatcherEnabled = true;
+// Settings.MemoryUsageWarningLevel = 60;
+// Settings.MemoryUsageOverloadLevel = 80;
 
 Console.WriteLine($"DefaultNetworkInterface OperationState: {Network.DefaultInterfaceOperationState.ToString()}");
 
@@ -32,43 +34,32 @@ Network.NetworkInterfaceOperationStateChanged += eventargs =>
 // cpu stuff
 // *********************************************************************************************************
 // *********************************************************************************************************
-void PrintCpuUsage()
+_ = Task.Factory.StartNew(async () =>
 {
-    Console.WriteLine(
-        $"Cpu Usage - Overall {Cpu.OverallUsage.Usage}% Core0: {Cpu.Core0Usage.Usage}% Core1: {Cpu.Core1Usage.Usage}% Core2: {Cpu.Core2Usage.Usage}% Core3: {Cpu.Core3Usage.Usage}%");
-}
-
-void PrintCpuUsageState()
-{
-    Console.WriteLine(
-        $"Cpu State - Overall {Cpu.OverallUsage.State.ToString()} Core0: {Cpu.Core0Usage.State.ToString()} Core1: {Cpu.Core1Usage.State.ToString()} Core2: {Cpu.Core2Usage.State.ToString()} Core3: {Cpu.Core3Usage.State.ToString()}");
-}
-
-PrintCpuUsage();
-PrintCpuUsageState();
-Cpu.CpuUsageStateChanged += eventArgs =>
-{
-    Console.WriteLine("CpuUsageStateChanged:");
-    PrintCpuUsageState();
-};
+    var cpuUsage = new CpuUsage();
+    await foreach (var cpu in cpuUsage)
+    {
+        Console.WriteLine($"Cpu Usage: {cpu.Usage:0.00}");
+        var cores = cpu.Cores.Select(s => s.ToString("0.00")).Aggregate((o, n) => $"{o},{n}");
+        Console.WriteLine($"Cores: {cores}");
+    }
+});
 
 // *********************************************************************************************************
 // *********************************************************************************************************
 // memory stuff
 // *********************************************************************************************************
 // *********************************************************************************************************
-void PrintMemory()
+_ = Task.Factory.StartNew(async () =>
 {
-    Console.WriteLine(
-        $"Memory Total {Memory.Total} Free: {Memory.Free} Usage: {Memory.Usage}% State: {Memory.State.ToString()}");
-}
-
-PrintMemory();
-Memory.MemoryUsageStateChanged += eventArgs =>
-{
-    Console.WriteLine("MemoryUsageStateChanged:");
-    PrintMemory();
-};
+    var memoryUsage = new MemoryUsage();
+    await foreach (var info in memoryUsage)
+    {
+        Console.WriteLine($"Memory: {info.MemoryFree.BytesToString()}:{info.MemorySize.BytesToString()}");
+        Console.WriteLine($"Swap: {info.SwapFree.BytesToString()}:{info.SwapSize.BytesToString()}");
+        Console.WriteLine($"Memory State: {info.State}");
+    }
+});
 
 // *********************************************************************************************************
 // *********************************************************************************************************

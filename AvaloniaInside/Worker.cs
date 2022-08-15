@@ -18,11 +18,5 @@ internal class Worker
     {
         if (Settings.NetworkOperationStateDetectionEnabled)
             Network.CheckDefaultNetworkInterfaceOperationState();
-
-        if (Settings.CpuUsageWatcherEnabled)
-            Cpu.UpdateCpuUsageInformation();
-                
-        if (Settings.MemoryUsageWatcherEnabled)
-            Memory.UpdateMemoryUsageInformation();
     }
 }
