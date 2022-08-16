@@ -1,46 +1,14 @@
 namespace AvaloniaInside.SystemManager.Monitor;
 
-public sealed class CpuUsage : IAsyncEnumerable<CpuUsageInformation>, IAsyncEnumerator<CpuUsageInformation>
+public sealed class CpuUsage : IntervalCollection<CpuUsageInformation>
 {
-    private bool _isStarted;
-    private bool _isDisposed;
     private List<(float[] values, int core)> _prevCoreInfo = new();
-    private CancellationToken _cancellationToken;
 
-    public CpuUsageInformation Current { get; } = new();
-    /// <summary>
-    /// Interval of cpu usage check in milliseconds, recommended to use default value, 1000 
-    /// </summary>
-    public int Interval { get; set; } = 1000;
+    public override CpuUsageInformation Current { get; protected set; } = new();
 
-    public IAsyncEnumerator<CpuUsageInformation> GetAsyncEnumerator(
-        CancellationToken cancellationToken = new CancellationToken())
+    protected override async Task<CpuUsageInformation> NewValueAsync(CancellationToken cancellationToken)
     {
-        if (_isDisposed) throw new ObjectDisposedException("Object already disposed");
-        
-        _cancellationToken = cancellationToken;
-        if (_isStarted) throw new InvalidOperationException("Already is running. Create another instance");
-        _isStarted = true;
-
-        return this;
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        if (_isDisposed) return ValueTask.CompletedTask;
-        _isDisposed = true;
-        _prevCoreInfo.Clear();
-        _prevCoreInfo = null;
-        return ValueTask.CompletedTask;
-    }
-
-    public async ValueTask<bool> MoveNextAsync()
-    {
-        if (_isDisposed) throw new ObjectDisposedException("Object already disposed");
-        if (!_isStarted) throw new InvalidOperationException("Bad usage, Please use async foreach to start operations");
-
-        await Task.Delay(Interval, _cancellationToken).ConfigureAwait(false);
-        var statLines = await File.ReadAllLinesAsync("/proc/stat", _cancellationToken);
+        var statLines = await File.ReadAllLinesAsync("/proc/stat", cancellationToken);
         var query =
             from line in statLines
             where line.StartsWith("cpu")
@@ -68,10 +36,23 @@ public sealed class CpuUsage : IAsyncEnumerable<CpuUsageInformation>, IAsyncEnum
         var percentage = join.OrderBy(o => o.Core).ToList();
         Current.Usage = percentage.First().Percent;
         Current.Cores = percentage.Skip(1).Select(s => s.Percent).ToArray();
-        
+
         _prevCoreInfo.Clear();
         _prevCoreInfo.AddRange(output);
 
-        return true;
+        if (float.IsNaN(Current.Usage))
+        {
+            Current.Usage = 0;
+            for (var i = 0; i < Current.Cores.Length; i++) Current.Cores[i] = 0;
+        }
+
+        return Current;
+    }
+
+    protected override void Disposing()
+    {
+        base.Disposing();
+        _prevCoreInfo.Clear();
+        _prevCoreInfo = null;
     }
 }
