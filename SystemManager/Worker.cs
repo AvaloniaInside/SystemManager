@@ -1,4 +1,4 @@
-namespace AvaloniaInside;
+namespace SystemManager;
 
 internal class Worker
 {

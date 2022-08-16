@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AvaloniaInside;
+namespace SystemManager;
 
 public static class Ssh
 {

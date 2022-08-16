@@ -1,8 +1,8 @@
-﻿using AvaloniaInside;
-using AvaloniaInside.Helpers;
-using AvaloniaInside.Monitor;
+﻿using SystemManager;
+using SystemManager.Helpers;
+using SystemManager.Monitor;
 
-AvaloniaInside.System.Init();
+SystemManager.System.Init();
 
 // *********************************************************************************************************
 // *********************************************************************************************************

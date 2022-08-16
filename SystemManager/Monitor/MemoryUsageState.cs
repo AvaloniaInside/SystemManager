@@ -1,4 +1,4 @@
-namespace AvaloniaInside.Monitor;
+namespace SystemManager.Monitor;
 
 public enum MemoryUsageState
 {

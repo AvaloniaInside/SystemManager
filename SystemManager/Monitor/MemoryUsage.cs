@@ -1,6 +1,6 @@
-using AvaloniaInside.Helpers;
+using SystemManager.Helpers;
 
-namespace AvaloniaInside.Monitor;
+namespace SystemManager.Monitor;
 
 public class MemoryUsage : IAsyncEnumerable<MemoryUsageInformation>, IAsyncEnumerator<MemoryUsageInformation>
 {

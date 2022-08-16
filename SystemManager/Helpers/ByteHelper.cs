@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace AvaloniaInside.Helpers;
+namespace SystemManager.Helpers;
 
 public static class ByteHelper
 {

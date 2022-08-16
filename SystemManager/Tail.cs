@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace AvaloniaInside;
+namespace SystemManager;
 
 public class Tail : IAsyncEnumerable<string>, IAsyncEnumerator<string>
 {

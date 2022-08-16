@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AvaloniaInside;
+namespace SystemManager;
 
 internal class Bash
 {
