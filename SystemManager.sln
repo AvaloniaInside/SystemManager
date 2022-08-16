@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemManager", "SystemManager\SystemManager.csproj", "{89075B91-73ED-4F79-8707-147C5B9F09C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaInside.SystemManager", "src\AvaloniaInside.SystemManager.csproj", "{89075B91-73ED-4F79-8707-147C5B9F09C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7E018B7C-750B-47E3-A8FB-84E75CD8FFE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemManager.Console", "SystemManager.Console\SystemManager.Console.csproj", "{60AE1EB9-D231-495D-8A10-055B0ACEF6E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemManager.Console", "samples\SystemManager.Console\SystemManager.Console.csproj", "{60AE1EB9-D231-495D-8A10-055B0ACEF6E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
