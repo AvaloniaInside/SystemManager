@@ -2,6 +2,8 @@
 using AvaloniaInside.SystemManager.Helpers;
 using AvaloniaInside.SystemManager.Monitor;
 
+var cts = new CancellationTokenSource();
+
 AvaloniaInside.SystemManager.System.Init();
 
 // *********************************************************************************************************
@@ -37,7 +39,7 @@ Network.NetworkInterfaceOperationStateChanged += eventargs =>
 _ = Task.Factory.StartNew(async () =>
 {
     var cpuUsage = new CpuUsage();
-    await foreach (var cpu in cpuUsage)
+    await foreach (var cpu in cpuUsage.WithCancellation(cts.Token))
     {
         Console.WriteLine($"Cpu Usage: {cpu.Usage:0.00}");
         var cores = cpu.Cores.Select(s => s.ToString("0.00")).Aggregate((o, n) => $"{o},{n}");
@@ -53,7 +55,7 @@ _ = Task.Factory.StartNew(async () =>
 _ = Task.Factory.StartNew(async () =>
 {
     var memoryUsage = new MemoryUsage();
-    await foreach (var info in memoryUsage)
+    await foreach (var info in memoryUsage.WithCancellation(cts.Token))
     {
         Console.WriteLine($"Memory: {info.MemoryFree.BytesToString()}:{info.MemorySize.BytesToString()}");
         Console.WriteLine($"Swap: {info.SwapFree.BytesToString()}:{info.SwapSize.BytesToString()}");
@@ -83,5 +85,10 @@ Storage.Test();
 // make an endless loop
 Task.Factory.StartNew(() =>
 {
-    while (true) Thread.Sleep(250);
+    while (Console.ReadLine() != "q")
+    {
+        
+    }
+    
+    cts.Cancel();
 }).Wait();
