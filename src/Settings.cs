@@ -7,5 +7,5 @@ public static class Settings
     public static SshType SshType { get; set; } = SshType.Dropbear;
     public static bool CpuUsageWatcherEnabled { get; set; } = true;
     public static double MemoryUsageWarningLevel { get; set; } = 65.0;
-    public static double MemoryUsageOverloadLevel { get; set; } = 85.0;
+    public static double MemoryUsageOverloadLevel { get; set; } = 0.85;
 }

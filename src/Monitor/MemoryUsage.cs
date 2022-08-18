@@ -26,7 +26,7 @@ public class MemoryUsage : IntervalCollection<MemoryUsageInformation>
             }
         }
 
-        Current.State = EvaluateMemoryUsageState(Current.MemorySize - Current.MemoryFree);
+        Current.State = EvaluateMemoryUsageState(Current.MemoryFree / Current.MemorySize);
         return Current;
     }
 
