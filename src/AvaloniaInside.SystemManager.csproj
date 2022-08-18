@@ -5,6 +5,21 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
+        <Title>AvaloniaInside SystemManager</Title>
+        <Authors>AvaloniaInside</Authors>
+        <PackageTags>AvaloniaInside, SystemManager, Monitor, Cpu, Memory, Temperature</PackageTags>
+        <Company>AvaloniaInside</Company>
+        <Product>SystemManager</Product>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>SystemManager for AvaloniaInside Based Systems</Description>
+        <Copyright>Copyright 2022 © AvaloniaInside</Copyright>
+        <PackageProjectUrl>https://github.com/AvaloniaInside/SystemManager</PackageProjectUrl>
+        <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+        <PackageLicenseType>MIT</PackageLicenseType>
+        <RepositoryUrl>https://github.com/AvaloniaInside/SystemManager</RepositoryUrl>
+        <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageVersion>1.0.0</PackageVersion>
     </PropertyGroup>
 
 </Project>
