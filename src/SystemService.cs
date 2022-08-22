@@ -16,7 +16,7 @@ internal static class SystemService
     {
         try
         {
-            Bash.Execute($"/etc/init.d/{service}", parameter, out var error, out _);
+            Bash.Execute($"{SystemConstants.InitD}{service}", parameter, out var error, out _);
             if (!string.IsNullOrEmpty(error)) Console.WriteLine($"Error: {error}");
         }
         catch (Exception ex)

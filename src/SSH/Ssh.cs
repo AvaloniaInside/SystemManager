@@ -4,9 +4,6 @@ namespace AvaloniaInside.SystemManager;
 
 public static class Ssh
 {
-    private static readonly string DropBearServiceFileName = "S50dropbear";
-    private static readonly string SshdServiceFileName = "S50sshd";
-
     /// <summary>
     ///     Determines if any ssh service is running.
     /// </summary>
@@ -28,7 +25,7 @@ public static class Ssh
     /// <returns></returns>
     private static string GetSshTypeServiceName()
     {
-        return Settings.SshType == SshType.Dropbear ? DropBearServiceFileName : SshdServiceFileName;
+        return Settings.SshType == SshType.Dropbear ? SystemConstants.DropBearService : SystemConstants.SshdService;
     }
 
     /// <summary>
@@ -39,7 +36,7 @@ public static class Ssh
         var detectedRunningType = GetCurrentRunningSshType();
         if (detectedRunningType == null || detectedRunningType == Settings.SshType)
             return; // no running ssh service found
-        SystemService.Stop(detectedRunningType is SshType.Dropbear ? DropBearServiceFileName : SshdServiceFileName);
+        SystemService.Stop(detectedRunningType is SshType.Dropbear ? SystemConstants.DropBearService : SystemConstants.SshdService);
     }
 
     /// <summary>

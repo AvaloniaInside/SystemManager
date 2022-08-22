@@ -10,7 +10,7 @@ public class MemoryUsage : IntervalCollection<MemoryUsageInformation>
 
     protected override async Task<MemoryUsageInformation> NewValueAsync(CancellationToken cancellationToken)
     {
-        var meminfoLines = await File.ReadAllLinesAsync("/proc/meminfo", cancellationToken);
+        var meminfoLines = await File.ReadAllLinesAsync(SystemConstants.MemInfo, cancellationToken);
         var items = meminfoLines
             .Select(s => s.Split(':', 2))
             .Where(w => w.Length == 2);

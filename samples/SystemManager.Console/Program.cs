@@ -6,17 +6,19 @@ var cts = new CancellationTokenSource();
 
 AvaloniaInside.SystemManager.System.Init();
 
-// *********************************************************************************************************
-// *********************************************************************************************************
-// network stuff
-// *********************************************************************************************************
-// *********************************************************************************************************
 Settings.DefaultNetworkInterface = "eth0";
 Settings.NetworkOperationStateDetectionEnabled = true;
 Settings.CpuUsageWatcherEnabled = true;
 // Settings.MemoryUsageWatcherEnabled = true;
 // Settings.MemoryUsageWarningLevel = 60;
 // Settings.MemoryUsageOverloadLevel = 80;
+
+// *********************************************************************************************************
+// *********************************************************************************************************
+// network stuff
+// *********************************************************************************************************
+// *********************************************************************************************************
+var networkInformation = Network.GetNetworkInformation(Settings.DefaultNetworkInterface);
 
 Console.WriteLine($"DefaultNetworkInterface OperationState: {Network.DefaultInterfaceOperationState.ToString()}");
 
@@ -87,8 +89,7 @@ Task.Factory.StartNew(() =>
 {
     while (Console.ReadLine() != "q")
     {
-        
     }
-    
+
     cts.Cancel();
 }).Wait();

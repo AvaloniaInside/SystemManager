@@ -6,7 +6,7 @@ internal class Bash
 {
     public static void Execute(string arguments, out string error, out string output)
     {
-        Execute("/bin/sh", arguments, out error, out output);
+        Execute(SystemConstants.Sh, arguments, out error, out output);
     }
 
     public static void Execute(string file, string arguments, out string error, out string output)

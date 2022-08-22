@@ -5,22 +5,10 @@ public static class Network
     public delegate void NetworkInterfaceOperationStateChangedHandler(
         NetworkInterfaceOperationStateChangedEventArgs eventargs);
 
-    private static string _hostName;
-
-    public static string HostName
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(_hostName))
-                _hostName = GetHostName();
-            return _hostName;
-        }
-        set
-        {
-            SetHostName(value);
-            _hostName = value;
-        }
-    }
+    /// <summary>
+    ///     Information about the network configuration
+    /// </summary>
+    public static NetworkInformation? Information { get; private set; }
 
     public static NetworkInterfaceOperationState DefaultInterfaceOperationState { get; private set; }
 
@@ -44,31 +32,22 @@ public static class Network
         }
     }
 
+    public static NetworkInformation? GetNetworkInformation(string networkInterface)
+    {
+        Information = NetworkHandler.GetNetworkInformation(networkInterface);
+        return Information;
+    }
+
     /// <summary>
-    ///     Gets the <see cref="NetworkInterfaceOperationState" /> for an ethernet interface
+    ///     Gets the
+    ///     <see cref="NetworkInterfaceOperationState" />
+    ///     for an ethernet interface
     /// </summary>
     /// <param name="networkInterface"></param>
     /// <returns></returns>
     public static NetworkInterfaceOperationState GetNetworkInterfaceOperationState(string networkInterface)
     {
-        try
-        {
-            Bash.Execute($"cat /sys/class/net/{networkInterface}/operstate",
-                out var error, out var output);
-            if (!string.IsNullOrEmpty(error))
-            {
-                Console.WriteLine($"CheckIfEthernetIsUp error: {error}");
-                return NetworkInterfaceOperationState.Unavailable;
-            }
-
-            output = output.Trim().Replace(Environment.NewLine, "");
-            return output == "up" ? NetworkInterfaceOperationState.Up : NetworkInterfaceOperationState.Down;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"CheckIfEthernetIsUp error: {ex.Message}");
-            return NetworkInterfaceOperationState.Unavailable;
-        }
+        return NetworkInterfaceOperationStateHandler.GetNetworkInterfaceOperationState(networkInterface);
     }
 
     /// <summary>
@@ -76,7 +55,7 @@ public static class Network
     /// </summary>
     public static void StartDaemon()
     {
-        SystemService.Start("S40network");
+        SystemService.Start(SystemConstants.NetworkService);
     }
 
     /// <summary>
@@ -84,23 +63,15 @@ public static class Network
     /// </summary>
     public static void StopDaemon()
     {
-        SystemService.Stop("S40network");
-    }
-
-    /// <summary>
-    ///     Gets the hostname
-    /// </summary>
-    /// <param name="hostName"></param>
-    private static void SetHostName(string hostName)
-    {
-        File.WriteAllText("/proc/sys/kernel/hostname", hostName);
+        SystemService.Stop(SystemConstants.NetworkService);
     }
 
     /// <summary>
     ///     Sets the hostname
     /// </summary>
-    private static string GetHostName()
+    /// <param name="hostName"></param>
+    public static void SetHostName(string hostName)
     {
-        return File.ReadAllText("/proc/sys/kernel/hostname");
+        NetworkHandler.SetHostName(hostName);
     }
 }

@@ -9,7 +9,7 @@ public class Thermal
 
     public IReadOnlyList<ThermalZone> GetZones() =>
         _thermalZones ??= Directory
-            .GetDirectories("/sys/class/thermal/", "thermal_zone*")
+            .GetDirectories(SystemConstants.Thermal, "thermal_zone*")
             .Select(s => new ThermalZone(s))
             .ToList()
             .AsReadOnly();

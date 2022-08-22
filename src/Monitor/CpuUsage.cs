@@ -8,7 +8,7 @@ public sealed class CpuUsage : IntervalCollection<CpuUsageInformation>
 
     protected override async Task<CpuUsageInformation> NewValueAsync(CancellationToken cancellationToken)
     {
-        var statLines = await File.ReadAllLinesAsync("/proc/stat", cancellationToken);
+        var statLines = await File.ReadAllLinesAsync(SystemConstants.ProcStat, cancellationToken);
         var query =
             from line in statLines
             where line.StartsWith("cpu")
